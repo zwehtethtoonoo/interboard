@@ -1,5 +1,8 @@
 <?php
+
 require './inc/db.php';
+require './inc/mode.php';
+
 $message = "";
 $new_title = "";
 $new_company = "";
@@ -12,44 +15,44 @@ $new_note = "";
 $new_intl = 0;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (isset($_POST['title'])) {
-        $new_title = $_POST['title'];
-    }
-    if (isset($_POST['company'])) {
-        $new_company = $_POST['company'];
-    }
-    if (isset($_POST['category'])) {
-        $new_category = $_POST['category'];
-    }
-    if (isset($_POST['place'])) {
-        $new_place = $_POST['place'];
-    }
-    if (isset($_POST['salary'])) {
-        $new_salary = $_POST['salary'];
-    }
-    if (isset($_POST['deadline'])) {
-        $new_deadline = $_POST['deadline'];
-    }
-    if (isset($_POST['url'])) {
-        $new_url = $_POST['url'];
-    }
-    if (isset($_POST['note'])) {
-        $new_note = $_POST['note'];
-    }
-    if (isset($_POST['intl'])) {
-        $new_intl = 1;
-    }
+  if (isset($_POST['title'])) {
+    $new_title = $_POST['title'];
+  }
+  if (isset($_POST['company'])) {
+    $new_company = $_POST['company'];
+  }
+  if (isset($_POST['category'])) {
+    $new_category = $_POST['category'];
+  }
+  if (isset($_POST['place'])) {
+    $new_place = $_POST['place'];
+  }
+  if (isset($_POST['salary'])) {
+    $new_salary = $_POST['salary'];
+  }
+  if (isset($_POST['deadline'])) {
+    $new_deadline = $_POST['deadline'];
+  }
+  if (isset($_POST['url'])) {
+    $new_url = $_POST['url'];
+  }
+  if (isset($_POST['note'])) {
+    $new_note = $_POST['note'];
+  }
+  if (isset($_POST['intl'])) {
+    $new_intl = 1;
+  }
 
-    if ($new_title === "" || $new_company === "" || $new_deadline === "" || $new_url === "") {
-        $message = "エラー: タイトル・会社名・締切・URLは必須項目です。";
-    } else {
-        $sql = "INSERT INTO post (category, title, company, place, salary, deadline, intl, closed, url, note) VALUES (?, ?, ?, ?, ?, ?, ?, 0, ?, ?)";
-        $stmt = $pdo->prepare($sql);
-        $stmt->execute(array($new_category, $new_title, $new_company, $new_place, (int)$new_salary, $new_deadline, $new_intl, $new_url, $new_note));
+  if ($new_title === "" || $new_company === "" || $new_deadline === "" || $new_url === "") {
+    $message = "エラー: タイトル・会社名・締切・URLは必須項目です。";
+  } else {
+    $sql = "INSERT INTO post (category, title, company, place, salary, deadline, intl, closed, url, note) VALUES (?, ?, ?, ?, ?, ?, ?, 0, ?, ?)";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute(array($new_category, $new_title, $new_company, $new_place, (int)$new_salary, $new_deadline, $new_intl, $new_url, $new_note));
 
-        header('Location: index.php');
-        exit;
-    }
+    header('Location: index.php');
+    exit;
+  }
 }
 
 $intl = ($_GET['intl'] ?? '') === '1';
@@ -88,32 +91,33 @@ $posts = $stmt->fetchAll();
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>ECC インターンボード</title>
-  <link rel="stylesheet" href="./inc/style.css?v=2">
+  <link rel="stylesheet" href="./inc/style.css?v=3">
 </head>
 
 <body>
   <?php include_once "./inc/header.php" ?>
   <main class="wrap">
+    <div class="top-section">
+      <section class="hero">
+        <h1>見つけたインターン情報を、<br>学生みんなでシェアしよう。</h1>
+        <p>「この会社で募集してた！」を投稿して、後輩や友だちの就職活動に役立てましょう。</p>
+      </section>
 
-    <section class="hero">
-      <h1>見つけたインターン情報を、<br>学生みんなでシェアしよう。</h1>
-      <p>「この会社で募集してた！」を投稿して、後輩や友だちの就職活動に役立てましょう。</p>
-    </section>
+      <form class="search" method="get">
+        <input type="search" name="q" value="<?= h($q) ?>" placeholder="企業名・キーワードで検索">
+        <input type="hidden" name="category" value="<?= h($category) ?>">
+        <?php if ($intl): ?><input type="hidden" name="intl" value="<?= $intl ? '1' : '' ?>"><?php endif; ?>
+        <button type="submit" class="btn-dark" value="">検索</button>
+      </form>
 
-    <form class="search" method="get">
-      <input type="search" name="q" value="<?= h($q) ?>" placeholder="企業名・キーワードで検索">
-      <input type="hidden" name="category" value="<?= h($category) ?>">
-      <?php if ($intl): ?><input type="hidden" name="intl" value="<?= $intl ? '1' : '' ?>"><?php endif; ?>
-      <button type="submit" class="btn-dark" value="">検索</button>
-    </form>
-
-    <div class="chips">
-      <button type="button" class="chip <?= ($category === '' && !$intl) ? 'is-active' : '' ?>">すべて</button>
-      <button type="button" class="chip <?= $category === 'Web' ? 'is-active' : '' ?>" data-category="Web">Web</button>
-      <button type="button" class="chip <?= $category === 'ゲーム' ? 'is-active' : '' ?>" data-category="ゲーム">ゲーム</button>
-      <button type="button" class="chip <?= $category === 'AI' ? 'is-active' : '' ?>" data-category="AI">AI</button>
-      <button type="button" class="chip <?= $intl ? 'is-active' : '' ?>" data-intl="1">留学生</button>
-      <button type="button" class="chip <?= $category === 'その他' ? 'is-active' : '' ?>" data-category="その他">その他</button>
+      <div class="chips">
+        <button type="button" class="chip <?= ($category === '' && !$intl) ? 'is-active' : '' ?>">すべて</button>
+        <button type="button" class="chip <?= $category === 'Web' ? 'is-active' : '' ?>" data-category="Web">Web</button>
+        <button type="button" class="chip <?= $category === 'ゲーム' ? 'is-active' : '' ?>" data-category="ゲーム">ゲーム</button>
+        <button type="button" class="chip <?= $category === 'AI' ? 'is-active' : '' ?>" data-category="AI">AI</button>
+        <button type="button" class="chip <?= $intl ? 'is-active' : '' ?>" data-intl="1">留学生</button>
+        <button type="button" class="chip <?= $category === 'その他' ? 'is-active' : '' ?>" data-category="その他">その他</button>
+      </div>
     </div>
 
     <div id="results">
@@ -140,36 +144,36 @@ $posts = $stmt->fetchAll();
     </div>
   </main>
   <!-- Post dialog -->
-<dialog id="postDialog" <?= $message !== "" ? 'data-open="1"' : '' ?>>
-  <form method="post" action="index.php" class="dialog-body">
-    <h2>インターン情報を投稿する</h2>
+  <dialog id="postDialog" <?= $message !== "" ? 'data-open="1"' : '' ?>>
+    <form method="post" action="index.php" class="dialog-body">
+      <h2>インターン情報を投稿する</h2>
 
-    <?php if ($message !== ""): ?>
-      <p class="form-errors"><?= h($message) ?></p>
-    <?php endif; ?>
+      <?php if ($message !== ""): ?>
+        <p class="form-errors"><?= h($message) ?></p>
+      <?php endif; ?>
 
-    <label>タイトル<input name="title" value="<?= h($new_title) ?>" maxlength="100" required></label>
-    <label>会社名<input name="company" value="<?= h($new_company) ?>" maxlength="100" required></label>
-    <label>カテゴリ
-      <select name="category">
-        <?php foreach (['Web','ゲーム','AI','その他'] as $c): ?>
-          <option value="<?= h($c) ?>" <?= $c === $new_category ? 'selected' : '' ?>><?= h($c) ?></option>
-        <?php endforeach; ?>
-      </select>
-    </label>
-    <label>勤務地<input name="place" value="<?= h($new_place) ?>" maxlength="100" placeholder="例：東京・リモート可"></label>
-    <label>時給（円）<input name="salary" type="number" min="0" value="<?= h($new_salary) ?>" placeholder="例：1200（無給は0）"></label>
-    <label>締切<input name="deadline" type="date" value="<?= h($new_deadline) ?>" required></label>
-    <label>募集ページのURL<input name="url" type="url" value="<?= h($new_url) ?>" maxlength="255" placeholder="https://" required></label>
-    <label>ひとこと<textarea name="note" rows="3"><?= h($new_note) ?></textarea></label>
-    <label class="check"><input name="intl" type="checkbox" value="1" <?= $new_intl ? 'checked' : '' ?>> 留学生も応募OK</label>
+      <label>タイトル<input name="title" value="<?= h($new_title) ?>" maxlength="100" required></label>
+      <label>会社名<input name="company" value="<?= h($new_company) ?>" maxlength="100" required></label>
+      <label>カテゴリ
+        <select name="category">
+          <?php foreach (['Web', 'ゲーム', 'AI', 'その他'] as $c): ?>
+            <option value="<?= h($c) ?>" <?= $c === $new_category ? 'selected' : '' ?>><?= h($c) ?></option>
+          <?php endforeach; ?>
+        </select>
+      </label>
+      <label>勤務地<input name="place" value="<?= h($new_place) ?>" maxlength="100" placeholder="例：東京・リモート可"></label>
+      <label>時給（円）<input name="salary" type="number" min="0" value="<?= h($new_salary) ?>" placeholder="例：1200（無給は0）"></label>
+      <label>締切<input name="deadline" type="date" value="<?= h($new_deadline) ?>" required></label>
+      <label>募集ページのURL<input name="url" type="url" value="<?= h($new_url) ?>" maxlength="255" placeholder="https://" required></label>
+      <label>ひとこと<textarea name="note" rows="3"><?= h($new_note) ?></textarea></label>
+      <label class="check"><input name="intl" type="checkbox" value="1" <?= $new_intl ? 'checked' : '' ?>> 留学生も応募OK</label>
 
-    <div class="actions">
-      <button type="button" class="btn-ghost" id="cancelPost">キャンセル</button>
-      <button type="submit" class="btn-primary">投稿する</button>
-    </div>
-  </form>
-</dialog>
+      <div class="actions">
+        <button type="button" class="btn-ghost" id="cancelPost">キャンセル</button>
+        <button type="submit" class="btn-primary">投稿する</button>
+      </div>
+    </form>
+  </dialog>
   <script src="./inc/script.js?v=1"></script>
 </body>
 

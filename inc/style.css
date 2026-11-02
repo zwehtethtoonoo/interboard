@@ -79,6 +79,13 @@ button {
   gap: 28px;
 }
 
+.top-section {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  justify-content: center;
+}
+
 .hero h1 {
   margin: 0 0 12px;
   font-family: 'Zen Kaku Gothic New', sans-serif;
@@ -89,7 +96,7 @@ button {
 
 .hero p {
   margin: 0;
-  max-width: 560px;
+  max-width: 860px;
   color: var(--ink-soft);
 }
 
@@ -127,7 +134,7 @@ button {
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
-  max-width: 760px;
+  max-width: 900px;
 }
 
 .search input {
@@ -571,3 +578,200 @@ dialog::backdrop {
   border-radius: 10px;
   font-size: 14px;
 }
+
+/* ===== Editor() switch ===== */
+.header-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  align-items: center;
+}
+
+.mode-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  padding: 6px 8px 6px 16px;
+  border: 1px solid #CBD1E6;
+  border-radius: 999px;
+  background: #fff;
+  color: var(--ink);
+  font: 700 14px 'JetBrains Mono', monospace;
+  text-decoration: none;
+}
+
+.mode-track {
+  position: relative;
+  width: 44px;
+  height: 24px;
+  border-radius: 12px;
+  background: #6573C9;
+}
+
+.mode-knob {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #fff;
+  transition: left .15s;
+}
+
+/* ===== Editor mode ===== */
+
+body.editor {
+  --ground: #0D1117;
+  --ink: #E6EDF3;
+  --ink-soft: #B6BFCC;
+  --line: #30363D;
+  --primary: #1A7F37;
+  font-family: 'JetBrains Mono', 'Noto Sans JP', monospace;
+}
+
+body.editor h1,
+body.editor h2,
+body.editor h3,
+body.editor .brand-name,
+body.editor .side-title {
+  font-family: 'JetBrains Mono', 'Noto Sans JP', monospace;
+}
+
+body.editor :focus-visible {
+  outline-color: #79C0FF;
+}
+
+body.editor .site-header {
+  background: #0D1117;
+}
+
+body.editor .mode-switch {
+  background: transparent;
+  border-color: #3D444D;
+}
+
+body.editor .mode-track {
+  background: #1A7F37;
+}
+
+body.editor .mode-knob {
+  left: 23px;
+}
+
+body.editor .card,
+body.editor .empty,
+body.editor .detail-main,
+body.editor .detail-side,
+body.editor dialog {
+  background: #161B22;
+}
+
+body.editor dialog {
+  border: 1px solid #30363D;
+}
+
+body.editor dialog::backdrop {
+  background: rgba(1, 4, 9, .72);
+}
+
+body.editor .card.is-closed {
+  background: #0D1117;
+  color: #8B949E;
+}
+
+body.editor .card-bottom,
+body.editor .info-label {
+  color: #8B949E;
+}
+
+body.editor .card-bottom a,
+body.editor .back-link,
+body.editor .linklike {
+  color: #79C0FF;
+}
+
+body.editor .search input,
+body.editor .search select,
+body.editor .dialog-body input,
+body.editor .dialog-body select,
+body.editor .dialog-body textarea {
+  background: #0D1117;
+  border-color: #6E7681;
+  color: #A5D6FF;
+}
+
+body.editor ::placeholder {
+  color: #8B949E;
+}
+
+body.editor .chip {
+  background: #21262D;
+  border-color: #3D444D;
+  color: #A5D6FF;
+}
+
+body.editor .chip.is-active {
+  background: #1A7F37;
+  border-color: #1A7F37;
+  color: #fff;
+}
+
+body.editor .btn-dark {
+  background: #1A7F37;
+  color: #fff;
+}
+
+body.editor .btn-ghost,
+body.editor .btn-block.outline,
+body.editor .empty {
+  border-color: #6E7681;
+}
+
+body.editor .tag {
+  background: transparent;
+  border: 1px solid currentColor;
+}
+
+body.editor .tag-Web {
+  color: #A5D6FF;
+}
+
+body.editor .tag-ゲーム {
+  color: #FFA657;
+}
+
+body.editor .tag-AI {
+  color: #56D364;
+}
+
+body.editor .tag-その他 {
+  color: #D2A8FF;
+}
+
+body.editor .badge {
+  background: #21262D;
+}
+
+body.editor .badge-intl {
+  background: #12361F;
+  color: #56D364;
+}
+
+body.editor .form-errors {
+  background: #3D1F1B;
+  color: #FFB4A8;
+}
+
+body.editor .hero h1::before,
+body.editor .dialog-body h2::before {
+  content: "// ";
+  color: #8B949E;
+}
+
+body.editor .count::before {
+  content: "> ";
+  color: #8B949E;
+}
+

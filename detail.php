@@ -1,5 +1,6 @@
 <?php
-include_once 'inc/db.php';
+include_once './inc/db.php';
+include_once './inc/mode.php';
 
 $id = (int)($_GET['id'] ?? 0);
 $stmt = $pdo->prepare("SELECT * FROM post WHERE id = ?");
@@ -17,7 +18,7 @@ if (!$p) {
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><?= $p ? h($p['title']) . ' | ' : '' ?>ECC インターンボード</title>
-  <link rel="stylesheet" href="./inc/style.css?v=2">
+  <link rel="stylesheet" href="./inc/style.css?v=4">
 </head>
 
 <body>
