@@ -42,7 +42,7 @@ function search_url($q, $category, $intl)
   if ($intl) {
     $p['intl'] = '1';
   }
-  return 'search5.php' . ($p ? '?' . http_build_query($p) : '');
+  return 'search.php' . ($p ? '?' . http_build_query($p) : '');
 }
 ?>
 <!doctype html>
@@ -53,15 +53,15 @@ function search_url($q, $category, $intl)
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>探す | ECC インターンボード</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Noto+Sans+JP:wght@400;700&display=swap">
-  <link rel="stylesheet" href="./inc/style5.css?v=1">
+  <link rel="stylesheet" href="./inc/style.css?v=2">
 </head>
 
-<body>
-  <?php include_once "./inc/header5.php" ?>
+<body class="<?= $mode ?>">
+  <?php include_once "./inc/header.php" ?>
   <main class="page">
     <section class="win" aria-labelledby="search-title">
       <div class="win-bar"><span class="dot d1"></span><span class="dot d2"></span><span class="dot d3"></span><span class="fname">Search.java</span></div>
-      <form class="win-body" method="get" action="search5.php">
+      <form class="win-body search-body" method="get" action="search.php">
         <?php if ($category !== ''): ?><input type="hidden" name="category" value="<?= h($category) ?>"><?php endif; ?>
         <?php if ($intl): ?><input type="hidden" name="intl" value="1"><?php endif; ?>
 
@@ -98,7 +98,7 @@ function search_url($q, $category, $intl)
           <div class="post-side">
             <span class="status"><?= $p['closed'] ? 'CLOSED' : 'OPEN' ?></span>
             <?php if ($p['intl']): ?><span class="badge">留学生OK</span><?php endif; ?>
-            <a href="detail5.php?id=<?= (int)$p['id'] ?>">詳しく見る →</a>
+            <a href="detail.php?id=<?= (int)$p['id'] ?>">詳しく見る →</a>
           </div>
         </article>
       <?php endforeach; ?>
