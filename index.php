@@ -52,11 +52,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $message = "エラー: URLは http:// か https:// で始めてください。";
   } else {
     $sql = "INSERT INTO post (category, title, company, place, salary, deadline, intl, closed, url, note) VALUES (?, ?, ?, ?, ?, ?, ?, 0, ?, ?)";
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute(array($new_category, $new_title, $new_company, $new_place, (int)$new_salary, $new_deadline, $new_intl, $new_url, $new_note));
+    try {
+      $stmt = $pdo->prepare($sql);
+      $stmt->execute(array($new_category, $new_title, $new_company, $new_place, (int)$new_salary, $new_deadline, $new_intl, $new_url, $new_note));
 
-    header('Location: search.php');
-    exit;
+      echo "<script>
+              alert('Success!');
+              window.location.href = 'search.php';
+            </script>";
+      exit;
+    } catch (PDOException $e) {
+      error_log($e->getMessage());
+      $message = "投稿に失敗しました。もう一度お試しください。";
+    }
   }
 }
 
@@ -102,7 +110,7 @@ $open_count = (int)$pdo->query("SELECT COUNT(*) FROM post WHERE closed = 0")->fe
         <div class="r mid">
           <span class="ln" aria-hidden="true" style="font-size:19px">6</span>
           <span class="t i2"><span class="c">Intern</span> intern = <span class="k">new</span>
-            <span class="c">Intern</span>(<span class="s">"AI"</span>);</span>
+            <span class="c">Intern</span>(<span class="s"></span>);</span>
         </div>
         <div class="r">
           <span class="ln" aria-hidden="true">7</span>
